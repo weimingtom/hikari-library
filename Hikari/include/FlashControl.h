@@ -169,9 +169,14 @@ public:
 	void setQuality(short renderQuality);
 
 	/**
+	* Returns the name of this FlashControl.
+	*/
+	const Ogre::String & getName() const;
+
+	/**
 	* Retrieves the name of the Ogre::Material used by this FlashControl.
 	*/
-	Ogre::String getMaterialName() const;
+	const Ogre::String & getMaterialName() const;
 
 	/**
 	* Binds a local callback to a certain function name so that your Flash movie can call the function
@@ -254,6 +259,15 @@ public:
 	* @param	deltaY	The amount (in pixels) to move the overlay in the Y-axis.
 	*/
 	void move(int deltaX, int deltaY);
+
+	/**
+	* Retrieves the width and height that this FlashControl was created with.
+	*
+	* @param[out]	width	The unsigned short that will be used to store the retrieved width.
+	*
+	* @param[out]	height	The unsigned short that will be used to store the retrieved height.
+	*/
+	void getExtents(unsigned short &width, unsigned short &height) const;
 
 	/**
 	* Injects a mouse-move event into this FlashControl (in the control's local coordinate-space).

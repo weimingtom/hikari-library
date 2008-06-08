@@ -317,7 +317,12 @@ void FlashControl::setQuality(short renderQuality)
 	}
 }
 
-Ogre::String FlashControl::getMaterialName() const
+const Ogre::String & FlashControl::getName() const
+{
+	return name;
+}
+
+const Ogre::String & FlashControl::getMaterialName() const
 {
 	return materialName;
 }
@@ -368,6 +373,12 @@ void FlashControl::move(int deltaX, int deltaY)
 {
 	if(overlay)
 		overlay->move(deltaX, deltaY);
+}
+
+void FlashControl::getExtents(unsigned short &width, unsigned short &height) const
+{
+	width = this->width;
+	height = this->height;
 }
 
 void FlashControl::injectMouseMove(int xPos, int yPos)
