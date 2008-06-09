@@ -69,5 +69,3 @@ Finally, remember to delete the HikariManager singleton when your application sh
 		delete hikariMgr;
 }
 }}}
-
-That's pretty much the basics of getting started (don't forget to delete the HikariManager in your Application's destructor!).
