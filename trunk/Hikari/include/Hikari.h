@@ -38,6 +38,10 @@ enum MouseButtonID
 	MiddleMouseButton
 };
 
+/**
+* The HikariManager is used to create/destroy FlashControls and handle global
+* events such as mouse-input propagation and the management of keyboard focus.
+*/
 class _HikariExport HikariManager
 {
 public:

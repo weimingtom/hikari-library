@@ -112,26 +112,41 @@ public:
 	void setNull();
 
 	/**
-	* If this FlashValue is a boolean type, retrieves the boolean value.
+	* Retrieves the value as a boolean.
+	*
+	* @note	If the actual value type is FT_BOOLEAN, this directly retrieves the actual value. Otherwise
+	*		this function will make an interpretation of the value as that of a boolean. Number values
+	*		will be cast to boolean and string values will be parsed lexically ("true" and "false" are valid).
+	*		A value type of null will always return false.
 	*/
 	bool getBool() const;
 
 	/**
-	* If this FlashValue is a number type, retrieves the number value.
+	* Retrieves the value as a number.
+	*
+	* @note	If the actual value type is FT_NUMBER, this directly retrieves the actual value. Otherwise
+	*		this function will make an interpretation of the value as that of a number type. Boolean
+	*		values will be cast to a number and string values will be parsed lexically. A value type of
+	*		null will always return '0'.
 	*/
 	Ogre::Real getNumber() const;
 
 	/**
 	* If this FlashValue is a number type, retrieves the number value interpreted as a color.
 	*
-	* @note	Color values in ActionScript are generally encoded as a number.
+	* @note	Color values in ActionScript are generally encoded as a number, hence this function's utility.
 	*/
 	Ogre::ColourValue getNumberAsColor() const;
 
 	/**
-	* If this FlashValue is a string type, retrieves the string value.
+	* Retrieves the value as a string.
+	*
+	* @note	If the actual value type is FT_STRING, this directly retrieves the actual value. Otherwise
+	*		this function will make an interpretation of the value as that of a string type. Boolean
+	*		values will either be "true" or "false", number values will be output in standard form,
+	*		and null value types will always return an empty string.
 	*/
-	const Ogre::DisplayString& getString() const;
+	Ogre::DisplayString getString() const;
 };
 
 /**

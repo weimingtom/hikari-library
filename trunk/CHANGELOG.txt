@@ -1,3 +1,20 @@
+Current Version: Hikari v0.3
+
+API Changes since v0.2:
+- In FlashControl:
+-- FlashControl::getName has been added
+-- FlashControl::getExtents has been added
+-- FlashControl::setDraggable has been added
+
+Core Changes since v0.2:
+- FlashValue now supports value-type interpretation
+- Removed dependency upon shlwapi.
+
+Bugfixes since v0.2:
+- FlashControl overlays weren't being sorted correctly by z-order during focus, this has been fixed.
+- Patched up a memory leak in FlashControl, thanks to Adis.
+- Applied a potential workaround for heap corruption due to Ogre::DisplayString in FlashControl::callFunction.
+
 Current Version: Hikari v0.2
 
 - Foundation implemented

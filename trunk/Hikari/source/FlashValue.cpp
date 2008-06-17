@@ -23,6 +23,37 @@
 
 using namespace Hikari;
 
+template<class NumberType>
+inline NumberType toNumber(Ogre::DisplayString numberString)
+{
+	if(numberString.substr(0, 4).compare("true") == 0) return 1;
+	else if(numberString.substr(0, 4).compare("false") == 0) return 0;
+
+	std::istringstream converter(numberString);
+	
+	if(typeid(NumberType)==typeid(bool))
+	{
+		int result;
+		return (converter >> result).fail() ? false : !!result;
+	}
+
+	NumberType result;
+	return (converter >> result).fail() ? 0 : result;
+}
+
+template<class NumberType>
+inline std::string numberToString(const NumberType &number)
+{
+	std::ostringstream converter;
+
+	if(typeid(NumberType)==typeid(bool))
+	{
+		return number ? "true" : "false";
+	}
+
+	return (converter << number).fail() ? "" : converter.str();
+}
+
 FlashValue::FlashValue() : numValue(0), boolValue(0), valueType(FT_NULL)
 {
 }
@@ -71,16 +102,33 @@ void FlashValue::setNull()
 
 bool FlashValue::getBool() const
 {
-	return boolValue;
+	if(valueType == FT_BOOLEAN)
+		return boolValue;
+	else if(valueType == FT_NUMBER)
+		return !!((int)numValue);
+	else if(valueType == FT_STRING)
+		return toNumber<bool>(strValue);
+
+	return false;
 }
 
 Ogre::Real FlashValue::getNumber() const
 {
-	return numValue;
+	if(valueType == FT_NUMBER)
+		return numValue;
+	else if(valueType == FT_BOOLEAN)
+		return (Ogre::Real)boolValue;
+	else if(valueType == FT_STRING)
+		return toNumber<Ogre::Real>(strValue);
+
+	return 0;
 }
 
 Ogre::ColourValue FlashValue::getNumberAsColor() const
 {
+	if(valueType != FT_NUMBER)
+		return Ogre::ColourValue::ZERO;
+
 	Ogre::ColourValue result;
 	result.b = ((int)numValue % 256) / 255.0f;
 	result.g = (((int)numValue / 256) % 256) / 255.0f;
@@ -89,9 +137,16 @@ Ogre::ColourValue FlashValue::getNumberAsColor() const
 	return result;
 }
 
-const Ogre::DisplayString& FlashValue::getString() const
+Ogre::DisplayString FlashValue::getString() const
 {
-	return strValue;
+	if(valueType == FT_STRING)
+		return strValue;
+	else if(valueType == FT_BOOLEAN)
+		return numberToString<bool>(boolValue);
+	else if(valueType == FT_NUMBER)
+		return numberToString<Ogre::Real>(numValue);
+
+	return "";
 }
 
 Args::Args()

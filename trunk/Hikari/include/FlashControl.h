@@ -97,6 +97,7 @@ protected:
 	Ogre::String materialName;
 	bool compensateNPOT;
 	bool isTransparent;
+	bool isDraggable;
 
 	typedef std::map<Ogre::DisplayString, FlashDelegate> DelegateMap;
 	typedef DelegateMap::iterator DelegateIter;
@@ -106,6 +107,7 @@ protected:
 	void createControl();
 	void createMaterial();
 	bool isPointOverMe(int screenX, int screenY);
+	void invalidateTotally();
 	void handleKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam);
 	void handleFlashCall(const std::wstring& xmlString);
 	void update();
@@ -169,6 +171,14 @@ public:
 	void setQuality(short renderQuality);
 
 	/**
+	* Sets whether this FlashControl is draggable via the right-mouse-button,
+	* this is only applicable to FlashControls created as an overlay.
+	*
+	* @param	isDraggable		Whether or not this FlashControl should be draggable.
+	*/
+	void setDraggable(bool isDraggable);
+
+	/**
 	* Returns the name of this FlashControl.
 	*/
 	const Ogre::String & getName() const;
@@ -228,7 +238,7 @@ public:
 	*
 	* @note	It is highly recommended to use the 'Args(arg1)(arg2)(arg3)...' helper class to pass arguments.
 	*/
-	FlashValue callFunction(const Ogre::DisplayString& funcName, const Arguments& args = Args());
+	FlashValue callFunction(Ogre::DisplayString funcName, const Arguments& args = Args());
 
 	/**
 	* If this FlashControl was created as an overlay, hides the overlay.
