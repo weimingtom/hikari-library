@@ -171,10 +171,11 @@ bool HikariManager::injectMouseMove(short x, short y)
 
 	if(mouseButtonRDown && focusedControl)
 	{
-		//if(control is movable)
-		focusedControl->move(x-mouseXPos, y-mouseYPos);
-
-		eventHandled = true;
+		if(focusedControl->isDraggable)
+		{
+			focusedControl->move(x-mouseXPos, y-mouseYPos);
+			eventHandled = true;
+		}
 	}
 	else
 	{
@@ -302,7 +303,7 @@ FlashControl* HikariManager::getTopControl(int x, int y)
 		if(!top)
 			top = iter->second;
 		else
-			top = top->overlay->panel->getZOrder() > top->overlay->panel->getZOrder() ? top : iter->second;
+			top = top->overlay->panel->getZOrder() > iter->second->overlay->panel->getZOrder() ? top : iter->second;
 	}
 
 	return top;

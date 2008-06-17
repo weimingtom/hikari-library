@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain_d.lib comsuppw.lib shlwapi.lib"
+				AdditionalDependencies="OgreMain_d.lib comsuppw.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				AdditionalLibraryDirectories="&quot;$(OGRE_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
@@ -133,7 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib comsuppw.lib shlwapi.lib"
+				AdditionalDependencies="OgreMain.lib comsuppw.lib"
 				AdditionalLibraryDirectories="&quot;$(OGRE_HOME)\lib&quot;"
 			/>
 			<Tool

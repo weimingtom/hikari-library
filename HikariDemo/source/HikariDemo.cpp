@@ -54,6 +54,7 @@ void HikariDemo::setupHikari()
 	fps = hikariMgr->createFlashOverlay("FPS", viewport, 130, 91, Position(TopLeft), 0);
 	fps->load("fps.swf");
 	fps->setTransparent(true);
+	fps->setDraggable(false);
 
 	controls = hikariMgr->createFlashOverlay("Controls", viewport, 350, 400, Position(Center), 1);
 	controls->load("controls.swf");

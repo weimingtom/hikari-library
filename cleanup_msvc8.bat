@@ -13,6 +13,7 @@
 @del Hikari\lib\*.ilk
 @del Hikari\lib\*.exp
 @del Hikari\lib\*.pdb
+@del Hikari\lib\*.idb
 @del HikariDemo\*.user
 @rmdir HikariDemo\objects\Release\ /S /Q
 @rmdir HikariDemo\objects\Debug\ /S /Q

@@ -305,12 +305,7 @@ public:
 		if(owner->dirtyBounds.left < 0 || owner->dirtyBounds.top < 0 || 
 			owner->dirtyBounds.right > owner->width || owner->dirtyBounds.bottom > owner->height || !pRect)
 		{
-			owner->isClean = false;
-			owner->isTotallyDirty = true;
-			owner->dirtyBounds.left = 0;
-			owner->dirtyBounds.top = 0;
-			owner->dirtyBounds.right = owner->width;
-			owner->dirtyBounds.bottom = owner->height;
+			owner->invalidateTotally();
 		}
 
 		return S_OK;
@@ -318,12 +313,7 @@ public:
 
 	HRESULT STDMETHODCALLTYPE InvalidateRgn(HRGN hRGN, BOOL fErase)
 	{	
-		owner->isClean = false;
-		owner->isTotallyDirty = true;
-		owner->dirtyBounds.left = 0;
-		owner->dirtyBounds.top = 0;
-		owner->dirtyBounds.right = owner->width;
-		owner->dirtyBounds.bottom = owner->height;
+		owner->invalidateTotally();
 
 		return S_OK;
 	}

@@ -26,7 +26,6 @@
 #include "impl/ViewportOverlay.h"
 #include "Hikari.h"
 #include "OgreBitwise.h"
-#include <shlwapi.h>
 
 using namespace Hikari;
 using namespace Ogre;
@@ -47,7 +46,7 @@ FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, i
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
-	compensateNPOT(false), isTransparent(false), okayToDelete(false)
+	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(true)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -73,7 +72,7 @@ FlashControl::FlashControl(const Ogre::String& name, int width, int height)
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
-	compensateNPOT(false), isTransparent(false), okayToDelete(false)
+	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(false)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -110,6 +109,7 @@ FlashControl::~FlashControl()
 	if(mainBitmap) ::DeleteObject(mainBitmap);
 	if(altContext) ::DeleteDC(altContext);
 	if(altBitmap) ::DeleteObject(altBitmap);
+	if(renderBuffer) delete renderBuffer;
 }
 
 typedef HRESULT (__stdcall *GetClassObject)(REFCLSID rclsid, REFIID riid, LPVOID * ppv); 
@@ -153,12 +153,7 @@ void FlashControl::createControl()
 
 	if(inPlaceObject)
 	{
-		isClean = false;
-		isTotallyDirty = true;
-		dirtyBounds.left = 0;
-		dirtyBounds.top = 0;
-		dirtyBounds.right = width;
-		dirtyBounds.bottom = height;
+		invalidateTotally();
 
 		inPlaceObject->SetObjectRects(&dirtyBounds, &dirtyBounds);
 		inPlaceObject->Release();
@@ -230,12 +225,7 @@ void FlashControl::createMaterial()
 	texUnit = matPass->createTextureUnitState(name + "Texture");
 	texUnit->setTextureFiltering(FO_NONE, FO_NONE, FO_NONE);
 
-	isClean = false;
-	isTotallyDirty = true;
-	dirtyBounds.left = 0;
-	dirtyBounds.top = 0;
-	dirtyBounds.right = width;
-	dirtyBounds.bottom = height;
+	invalidateTotally();
 
 	if(overlay)
 	{
@@ -249,10 +239,16 @@ void FlashControl::load(const Ogre::String& movieFilename)
 {
 	std::string moviePath = HikariManager::Get().basePath + movieFilename;
 
-	if(PathFileExists(moviePath.c_str()))
+	FILE* file = fopen(moviePath.c_str(), "r");
+	if(file)
+	{
+		fclose(file);
 		flashInterface->PutMovie((moviePath).c_str());
+	}
 	else
+	{
 		OGRE_EXCEPT(Ogre::Exception::ERR_FILE_NOT_FOUND, "Could not load '" + moviePath + "', the file was not found.", "FlashControl::load");
+	}
 }
 
 void FlashControl::play()
@@ -317,6 +313,11 @@ void FlashControl::setQuality(short renderQuality)
 	}
 }
 
+void FlashControl::setDraggable(bool isDraggable)
+{
+	this->isDraggable = isDraggable;
+}
+
 const Ogre::String & FlashControl::getName() const
 {
 	return name;
@@ -342,7 +343,7 @@ void FlashControl::unbind(const Ogre::DisplayString& funcName)
 		delegateMap.erase(i);
 }
 
-FlashValue FlashControl::callFunction(const Ogre::DisplayString& funcName, const Arguments& args)
+FlashValue FlashControl::callFunction(Ogre::DisplayString funcName, const Arguments& args)
 {
 	std::wstring retval = (wchar_t*)flashInterface->CallFunction(Impl::serializeInvocation(funcName, args).c_str());
 	return Impl::deserializeValue(retval);
@@ -408,6 +409,16 @@ bool FlashControl::isPointOverMe(int screenX, int screenY)
 		return false;
 
 	return overlay->isWithinBounds(screenX, screenY);
+}
+
+void FlashControl::invalidateTotally()
+{
+	isClean = false;
+	isTotallyDirty = true;
+	dirtyBounds.left = 0;
+	dirtyBounds.top = 0;
+	dirtyBounds.right = width;
+	dirtyBounds.bottom = height;
 }
 
 void FlashControl::handleKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam)
@@ -568,4 +579,6 @@ void FlashControl::loadResource(Ogre::Resource* resource)
 	tex->setFormat(isTransparent? PF_BYTE_BGRA : PF_BYTE_BGR);
 	tex->setUsage(TU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
 	tex->createInternalResources();
+
+	invalidateTotally();
 }
