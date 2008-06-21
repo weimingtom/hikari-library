@@ -165,9 +165,60 @@ public:
 	*/
 	bool injectMouseUp(int buttonID);
 
+	/**
+	* Injects a keyboard-event to be handled by the focused FlashControl. You generally
+	* don't need to call this unless you've disabled the keyboard-hook and wish to
+	* inject keyboard/IME messages directly from your WindowProc.
+	*
+	* @param	msg		Specifies the message to be sent.
+	* @param	wParam	Specifies additional message-specific information.
+	* @param	lParam	Specifies additional message-specific information.
+	*
+	* @note You should only forward the following window messages using this function:
+	*	<ul>
+	*	<li>WM_KEYDOWN
+	*	<li>WM_KEYUP
+	*	<li>WM_CHAR
+	*	<li>WM_DEADCHAR
+	*	<li>WM_SYSKEYDOWN
+	*	<li>WM_SYSKEYUP
+	*	<li>WM_SYSDEADCHAR
+	*	<li>WM_SYSCHAR
+	*	<li>WM_IME_CHAR
+	*	<li>WM_IME_COMPOSITION
+	*	<li>WM_IME_COMPOSITIONFULL
+	*	<li>WM_IME_CONTROL
+	*	<li>WM_IME_ENDCOMPOSITION
+	*	<li>WM_IME_KEYDOWN
+	*	<li>WM_IME_KEYUP
+	*	<li>WM_IME_NOTIFY
+	*	<li>WM_IME_REQUEST
+	*	<li>WM_IME_SELECT
+	*	<li>WM_IME_SETCONTEXT
+	*	<li>WM_IME_STARTCOMPOSITION
+	*	<li>WM_HELP
+	*	<li>WM_CANCELMODE
+	*	</ul>
+	*/
+	void injectKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam);
+
+	/**
+	* Sets whether or not the keyboard-hook is enabled and should
+	* automatically catch and forward all keyboard messages to the
+	* focused FlashControl. (Enabled by default)
+	*
+	* @param	isEnabled	Whether or not the keyboard-hook is enabled.
+	*
+	* @note	For some reason, IME doesn't work properly using the
+	*	the keyboard hook to catch keyboard messages and so, as
+	*	a workaround, you can disable the keyboard-hook and forward
+	*	keyboard/IME messages directly to Hikari from your main
+	*	window's WindowProc.
+	*/
+	void setKeyboardHookEnabled(bool isEnabled);
+
 protected:
 
-	void handleKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam);
 	bool focusControl(int x, int y, FlashControl* selection = 0);
 	FlashControl* getTopControl(int x, int y);
 

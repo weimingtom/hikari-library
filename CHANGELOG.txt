@@ -5,10 +5,15 @@ API Changes since v0.2:
 -- FlashControl::getName has been added
 -- FlashControl::getExtents has been added
 -- FlashControl::setDraggable has been added
+-- FlashControl::getUVScale has been added
+- In HikariManager:
+-- HikariManager::injectKeyEvent has been added
+-- HikariManager::setKeyboardHookEnabled has been added
 
 Core Changes since v0.2:
 - FlashValue now supports value-type interpretation
 - Removed dependency upon shlwapi.
+- As a workaround for better IME support, you may now disable the internal keyboard-hook and inject keyboard/IME messages directly from the main window's WindowProc.
 
 Bugfixes since v0.2:
 - FlashControl overlays weren't being sorted correctly by z-order during focus, this has been fixed.

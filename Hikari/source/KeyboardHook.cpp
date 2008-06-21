@@ -74,7 +74,7 @@ void KeyboardHook::handleHook(UINT msg, HWND hwnd, WPARAM wParam, LPARAM lParam)
 		{
 			HikariManager* manager = Hikari::HikariManager::GetPointer();
 			if(manager)
-				manager->handleKeyEvent(msg, wParam, lParam);
+				manager->injectKeyEvent(msg, wParam, lParam);
 			break;
 		}
 	}

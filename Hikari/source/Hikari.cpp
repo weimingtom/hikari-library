@@ -234,10 +234,27 @@ bool HikariManager::injectMouseUp(int buttonID)
 	return false;
 }
 
-void HikariManager::handleKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam)
+void HikariManager::injectKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if(focusedControl)
 		focusedControl->handleKeyEvent(msg, wParam, lParam);
+}
+
+void HikariManager::setKeyboardHookEnabled(bool isEnabled)
+{
+	if(isEnabled)
+	{
+		if(!keyboardHook)
+			keyboardHook = new Impl::KeyboardHook();
+	}
+	else
+	{
+		if(keyboardHook)
+		{
+			delete keyboardHook;
+			keyboardHook = 0;
+		}
+	}
 }
 
 bool HikariManager::focusControl(int x, int y, FlashControl* selection)
