@@ -382,6 +382,17 @@ void FlashControl::getExtents(unsigned short &width, unsigned short &height) con
 	height = this->height;
 }
 
+void FlashControl::getUVScale(Ogre::Real &uScale, Ogre::Real &vScale) const
+{
+	uScale = vScale = 1;
+
+	if(compensateNPOT)
+	{
+		uScale = (Real)width/(Real)texWidth;
+		vScale = (Real)height/(Real)texHeight;
+	}
+}
+
 void FlashControl::injectMouseMove(int xPos, int yPos)
 {
 	LRESULT result;

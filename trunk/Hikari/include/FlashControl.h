@@ -280,6 +280,17 @@ public:
 	void getExtents(unsigned short &width, unsigned short &height) const;
 
 	/**
+	* Gets the UV scale of this FlashControl's internal texture. On certain systems we must compensate for lack of
+	* NPOT-support on the videocard by using the next-highest POT texture. Normally, FlashControl overlays compensate 
+	* their texture coordinates automatically however FlashControls created as pure materials will need to adjust 
+	* their own by use of this function.
+	*
+	* @param[out]	uScale	The Ogre::Real that will be used to store the retrieved U-scale.
+	* @param[out]	vScale	The Ogre::Real that will be used to store the retrieved V-scale.
+	*/
+	void getUVScale(Ogre::Real &uScale, Ogre::Real &vScale) const;
+
+	/**
 	* Injects a mouse-move event into this FlashControl (in the control's local coordinate-space).
 	*
 	* @param	xPos	The local X-coordinate.
