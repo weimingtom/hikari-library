@@ -6,6 +6,7 @@ API Changes since v0.2:
 -- FlashControl::getExtents has been added
 -- FlashControl::setDraggable has been added
 -- FlashControl::getUVScale has been added
+-- FlashControl::setIgnoreTransparentPixels has been added
 - In HikariManager:
 -- HikariManager::injectKeyEvent has been added
 -- HikariManager::setKeyboardHookEnabled has been added
@@ -14,6 +15,8 @@ Core Changes since v0.2:
 - FlashValue now supports value-type interpretation
 - Removed dependency upon shlwapi.
 - As a workaround for better IME support, you may now disable the internal keyboard-hook and inject keyboard/IME messages directly from the main window's WindowProc.
+- Alpha-picking (the filtering of mouse clicks by transparency) is now implemented.
+- In the HikariManager, global mouse-movement events are now broadcast to all Flash overlays instead of only the top-most control
 
 Bugfixes since v0.2:
 - FlashControl overlays weren't being sorted correctly by z-order during focus, this has been fixed.

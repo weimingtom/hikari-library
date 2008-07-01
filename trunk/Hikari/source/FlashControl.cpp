@@ -46,7 +46,8 @@ FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, i
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
-	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(true)
+	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(true),
+	isIgnoringTransparent(true), transThreshold(0.04)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -72,7 +73,8 @@ FlashControl::FlashControl(const Ogre::String& name, int width, int height)
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
-	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(false)
+	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(false),
+	isIgnoringTransparent(false), transThreshold(0)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -318,6 +320,12 @@ void FlashControl::setDraggable(bool isDraggable)
 	this->isDraggable = isDraggable;
 }
 
+void FlashControl::setIgnoreTransparentPixels(bool shouldIgnore, Ogre::Real threshold)
+{
+	isIgnoringTransparent = shouldIgnore;
+	transThreshold = threshold;
+}
+
 const Ogre::String & FlashControl::getName() const
 {
 	return name;
@@ -419,7 +427,15 @@ bool FlashControl::isPointOverMe(int screenX, int screenY)
 	if(!overlay->isVisible)
 		return false;
 
-	return overlay->isWithinBounds(screenX, screenY);
+	if(overlay->isWithinBounds(screenX, screenY))
+	{
+		if(isTransparent && isIgnoringTransparent)
+			return renderBuffer->buffer[overlay->getRelativeY(screenY)*renderBuffer->rowSpan+overlay->getRelativeX(screenX)*4+3] > transThreshold * 255;
+		else
+			return true;
+	}
+
+	return false;
 }
 
 void FlashControl::invalidateTotally()

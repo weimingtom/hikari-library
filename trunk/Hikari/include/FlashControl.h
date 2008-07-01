@@ -98,6 +98,8 @@ protected:
 	bool compensateNPOT;
 	bool isTransparent;
 	bool isDraggable;
+	bool isIgnoringTransparent;
+	Ogre::Real transThreshold;
 
 	typedef std::map<Ogre::DisplayString, FlashDelegate> DelegateMap;
 	typedef DelegateMap::iterator DelegateIter;
@@ -177,6 +179,16 @@ public:
 	* @param	isDraggable		Whether or not this FlashControl should be draggable.
 	*/
 	void setDraggable(bool isDraggable);
+
+	/**
+	* Sets whether or not mouse-clicks over transparent pixels should be ignored (this is on by default),
+	* this is only applicable to transparent FlashControls created as an overlay.
+	*
+	* @param	shouldIgnore	Whether or not transparent pixels should be ignored.
+	* @param	threshold	The opacity threshold (in percent, 0 to 1.0), pixels with
+	*						opacities less than this amount will be ignored.
+	*/
+	void setIgnoreTransparentPixels(bool shouldIgnore, Ogre::Real threshold = 0.04);
 
 	/**
 	* Returns the name of this FlashControl.

@@ -179,12 +179,14 @@ bool HikariManager::injectMouseMove(short x, short y)
 	}
 	else
 	{
-		FlashControl* top = getTopControl(x, y);
-
-		if(top)
+		for(ControlMap::iterator iter = controls.begin(); iter != controls.end(); iter++)
 		{
-			top->injectMouseMove(top->overlay->getRelativeX(x), top->overlay->getRelativeY(y));
-			eventHandled = true;
+			if(iter->second->overlay)
+				iter->second->injectMouseMove(iter->second->overlay->getRelativeX(x), iter->second->overlay->getRelativeY(y));
+
+			if(!eventHandled)
+				if(iter->second->isPointOverMe(x, y))
+					eventHandled = true;
 		}
 	}
 
