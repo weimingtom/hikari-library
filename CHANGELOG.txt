@@ -7,6 +7,7 @@ API Changes since v0.2:
 -- FlashControl::setDraggable has been added
 -- FlashControl::getUVScale has been added
 -- FlashControl::setIgnoreTransparentPixels has been added
+-- FlashControl::getVisibility has been added
 - In HikariManager:
 -- HikariManager::injectKeyEvent has been added
 -- HikariManager::setKeyboardHookEnabled has been added

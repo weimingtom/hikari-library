@@ -100,7 +100,6 @@ protected:
 	bool isDraggable;
 	bool isIgnoringTransparent;
 	Ogre::Real transThreshold;
-	bool isVisible;
 
 	typedef std::map<Ogre::DisplayString, FlashDelegate> DelegateMap;
 	typedef DelegateMap::iterator DelegateIter;
@@ -264,7 +263,8 @@ public:
 	void show();
 
 	/**
-	* Returns whether or not this FlashControl is currently visible. (See FlashControl::hide and FlashControl::show)
+	* Returns whether or not the FlashControl overlay is currently visible. (See FlashControl::hide and FlashControl::show)
+	* If this FlashControl was not created as an overlay, always returns false.
 	*/
 	bool getVisibility() const;
 
