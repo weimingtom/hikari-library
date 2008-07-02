@@ -47,7 +47,7 @@ FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, i
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
 	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(true),
-	isIgnoringTransparent(true), transThreshold(0.04)
+	isIgnoringTransparent(true), transThreshold(0.04), isVisible(true)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -74,7 +74,7 @@ FlashControl::FlashControl(const Ogre::String& name, int width, int height)
 	overlay(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
 	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(false),
-	isIgnoringTransparent(false), transThreshold(0)
+	isIgnoringTransparent(false), transThreshold(0), isVisible(true)
 {
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
@@ -366,6 +366,10 @@ void FlashControl::show()
 {
 	if(overlay)
 		overlay->show();
+}
+bool FlashControl::getVisibility() const
+{
+	return isVisible;
 }
 void FlashControl::setOpacity(Ogre::Real opacity)
 {
