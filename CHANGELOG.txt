@@ -11,6 +11,8 @@ API Changes since v0.2:
 - In HikariManager:
 -- HikariManager::injectKeyEvent has been added
 -- HikariManager::setKeyboardHookEnabled has been added
+-- HikariManager::destroyAllControls has been added
+-- HikariManager::createFlashOverlay now allows automatic z-order incrementation
 
 Core Changes since v0.2:
 - FlashValue now supports value-type interpretation
@@ -23,6 +25,7 @@ Bugfixes since v0.2:
 - FlashControl overlays weren't being sorted correctly by z-order during focus, this has been fixed.
 - Patched up a memory leak in FlashControl, thanks to Adis.
 - Applied a potential workaround for heap corruption due to Ogre::DisplayString in FlashControl::callFunction.
+- Applied a potential fix for certain FlashControl destruction assertions.
 
 Current Version: Hikari v0.2
 
