@@ -78,11 +78,12 @@ public:
 	* @param	width	The width (in pixels).
 	* @param	height	The height (in pixels).
 	* @param	position	The position of the overlay, relative to the viewport.
-	* @param	zOrder	The z-order of the overlay.
+	* @param	zOrder	The z-order of the overlay. Specify '0' to automatically
+	*					use the next-highest z-order.
 	*
 	* @return	A pointer to the created FlashControl.
 	*/
-	FlashControl* createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder);
+	FlashControl* createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder = 0);
 
 	/**
 	* Creates a FlashControl as a pure Ogre Material.
@@ -106,11 +107,16 @@ public:
 	void destroyFlashControl(FlashControl* controlToDestroy);
 
 	/**
-	* Flags the specified FlashControl for destruction.
+	* Flags the specified FlashControl for destruction (to occur at the next update)
 	*
 	* @param	controlName	The name of the control to flag for destruction.
 	*/
 	void destroyFlashControl(const Ogre::String& controlName);
+
+	/**
+	* Flags all FlashControls for destruction (to occur at the next update)
+	*/
+	void destroyAllControls();
 
 	/**
 	* Retrieves a previously-created FlashControl by name.

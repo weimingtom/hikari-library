@@ -173,6 +173,9 @@ void FlashControl::createControl()
 	handler = new Impl::FlashHandler();
 	handler->AddRef();	
 	handler->Init(this);
+
+	IViewObject* curView = 0;
+	flashInterface->QueryInterface(IID_IViewObject, (void**)&curView);
 }
 
 void FlashControl::createMaterial()

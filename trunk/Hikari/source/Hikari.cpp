@@ -41,7 +41,7 @@ using namespace Hikari;
 HikariManager* HikariManager::instance = 0;
 
 HikariManager::HikariManager(const std::string& assetsDirectory) : flashLib(0), focusedControl(0), mouseXPos(0), mouseYPos(0), 
-	mouseButtonRDown(false), zOrderCounter(0), keyboardHook(0)
+	mouseButtonRDown(false), zOrderCounter(1), keyboardHook(0)
 {
 	if(instance)
 		throw std::exception("In HikariManager constructor, HikariManager is already instantiated!");
@@ -101,7 +101,7 @@ FlashControl* HikariManager::createFlashOverlay(const Ogre::String& name, Ogre::
 			"An attempt was made to create a FlashControl named '" + name + "' when a FlashControl by the same name already exists!", 
 			"HikariManager::createFlashOverlay");
 
-	return controls[name] = new FlashControl(name, viewport, width, height, position, zOrder);
+	return controls[name] = new FlashControl(name, viewport, width, height, position, zOrder? zOrder : ++zOrderCounter);
 }
 
 FlashControl* HikariManager::createFlashMaterial(const Ogre::String& name, int width, int height)
@@ -125,6 +125,18 @@ void HikariManager::destroyFlashControl(const Ogre::String& controlName)
 	FlashControl* control = getFlashControl(controlName);
 	if(control)
 		control->okayToDelete = true;
+}
+
+void HikariManager::destroyAllControls()
+{
+	for(ControlMap::iterator iter = controls.begin(); iter != controls.end(); iter++)
+	{
+		FlashControl* control = iter->second;
+		delete control;
+	}
+
+	controls.clear();
+	focusedControl = 0;
 }
 
 FlashControl* HikariManager::getFlashControl(const Ogre::String& controlName) const
