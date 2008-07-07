@@ -130,12 +130,8 @@ void HikariManager::destroyFlashControl(const Ogre::String& controlName)
 void HikariManager::destroyAllControls()
 {
 	for(ControlMap::iterator iter = controls.begin(); iter != controls.end(); iter++)
-	{
-		FlashControl* control = iter->second;
-		delete control;
-	}
+		iter->second->okayToDelete = true;
 
-	controls.clear();
 	focusedControl = 0;
 }
 
