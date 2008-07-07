@@ -356,8 +356,17 @@ void FlashControl::unbind(const Ogre::DisplayString& funcName)
 
 FlashValue FlashControl::callFunction(Ogre::DisplayString funcName, const Arguments& args)
 {
-	std::wstring retval = (wchar_t*)flashInterface->CallFunction(Impl::serializeInvocation(funcName, args).c_str());
-	return Impl::deserializeValue(retval);
+	BSTR returnVal = 0;
+	HRESULT result = flashInterface->raw_CallFunction(_bstr_t(Impl::serializeInvocation(funcName, args).c_str()), &returnVal);
+
+#ifdef _DEBUG
+	if(FAILED(result))
+		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
+			"Failed to call ActionScript function '" + funcName + "' from FlashControl '" + name + "'", 
+			"FlashControl::callFunction");
+#endif
+
+	return Impl::deserializeValue((wchar_t*)returnVal);
 }
 
 void FlashControl::hide()
