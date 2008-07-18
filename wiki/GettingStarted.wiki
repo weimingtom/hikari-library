@@ -17,7 +17,7 @@ In your application, add the `Hikari/include` path to your project's include dir
 I highly recommend reading the documentation within `Hikari.h`, `FlashControl.h`, and `FlashValue.h`.
 
 
-To instantiate the HikariManager singleton in your application, you will need to "new" it (similar to the Ogre Root singleton):
+To instantiate the HikariManager singleton in your application, you will need to "new" it (similar to the Ogre Root singleton), specifying the directory that contains your flash movies/assets:
 
 {{{
 using namespace Hikari;
@@ -25,7 +25,15 @@ using namespace Hikari;
 HikariManager* hikariMgr = new HikariManager("myFlashFiles");
 }}}
 
-Then, after you've created Ogre::Root, camera, viewport, and scenemanager, you can create FlashControl overlays:
+If you specify a relative directory for your asset path, please remember to use a backslash instead of a forward slash in your path:
+
+{{{
+using namespace Hikari;
+
+HikariManager* hikariMgr = new HikariManager("..\\media\\myFlashFiles");
+}}}
+
+Then, after you've created the HikariManager, Ogre::Root, camera, viewport, and scene-manager, you can create FlashControl overlays:
 
 {{{
 using namespace Hikari;
