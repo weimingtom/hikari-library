@@ -63,6 +63,21 @@ enum RenderQuality
 };
 
 /**
+* Used by FlashControl::setScaleMode, defines the scaling mode to use when the aspect ratio of the control does not match that of the movie.
+*
+* <ul>
+* <li>SM_SHOWALL - Preserves the movie's aspect ratio by adding borders. (Default)
+* <li>SM_NOBORDER - Preserves the movie's aspect ratio by cropping the sides.
+* <li>SM_EXACTFIT - Does not preserve the movie's aspect ratio, scales the movie to the dimensions of the control.
+*/
+enum ScaleMode
+{
+	SM_SHOWALL,
+	SM_NOBORDER,
+	SM_EXACTFIT
+};
+
+/**
 * The FlashControl class is an instance of the Flash Player that is rendered dynamically to a texture and
 * wrapped in an optional movable overlay using the Ogre3D engine.
 */
@@ -146,6 +161,11 @@ public:
 	void rewind();
 
 	/**
+	* Navigates the currently-loaded movie to a certain frame and stops there.
+	*/
+	void gotoFrame(long frameNum);
+
+	/**
 	* Sets whether or not the currently-loaded movie should restart when
 	* it reaches the end.
 	*
@@ -171,6 +191,13 @@ public:
 	* @param	renderQuality	The RenderQuality to use.
 	*/
 	void setQuality(short renderQuality);
+
+	/**
+	* Sets the scaling mode to use when the aspect ratio of the movie and control do not match.
+	*
+	* @param	scaleMode	The ScaleMode to use.
+	*/
+	void setScaleMode(short scaleMode);
 
 	/**
 	* Sets whether this FlashControl is draggable via the right-mouse-button,
@@ -331,6 +358,15 @@ public:
 	* @param	yPos	The local Y-coordinate.
 	*/
 	void injectMouseUp(int xPos, int yPos);
+
+	/**
+	* Injects a mouse-wheel event into this FlashControl (in the control's local coordinate-space).
+	*
+	* @param	relScroll	The relative scroll amount of the mouse-wheel.
+	* @param	xPos	The local X-coordinate of the mouse.
+	* @param	yPos	The local Y-coordinate of the mouse.
+	*/
+	void injectMouseWheel(int relScroll, int xPos, int yPos);
 
 	void loadResource(Ogre::Resource* resource);
 };

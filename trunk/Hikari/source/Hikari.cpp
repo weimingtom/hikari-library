@@ -244,6 +244,20 @@ bool HikariManager::injectMouseUp(int buttonID)
 	return false;
 }
 
+bool HikariManager::injectMouseWheel(int relScroll)
+{
+	if(focusedControl)
+	{
+		if(focusedControl->isPointOverMe(mouseXPos, mouseYPos))
+		{
+			focusedControl->injectMouseWheel(relScroll, focusedControl->overlay->getRelativeX(mouseXPos), focusedControl->overlay->getRelativeY(mouseYPos));
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void HikariManager::injectKeyEvent(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if(focusedControl)
