@@ -271,6 +271,11 @@ void FlashControl::rewind()
 	flashInterface->Rewind();
 }
 
+void FlashControl::gotoFrame(long frameNum)
+{
+	flashInterface->raw_GotoFrame(frameNum);
+}
+
 void FlashControl::setLoop(bool shouldLoop)
 {
 	flashInterface->PutLoop(shouldLoop);
@@ -316,6 +321,11 @@ void FlashControl::setQuality(short renderQuality)
 		flashInterface->PutQuality2("autohigh");
 		break;
 	}
+}
+
+void FlashControl::setScaleMode(short scaleMode)
+{
+	flashInterface->PutScaleMode(scaleMode);
 }
 
 void FlashControl::setDraggable(bool isDraggable)
@@ -436,6 +446,16 @@ void FlashControl::injectMouseUp(int xPos, int yPos)
 {
 	LRESULT result;
 	windowlessObject->OnWindowMessage(WM_LBUTTONUP, 0, MAKELPARAM(xPos, yPos), &result);
+}
+
+#ifndef WM_MOUSEWHEEL
+#	define WM_MOUSEWHEEL 0x020A
+#endif
+
+void FlashControl::injectMouseWheel(int relScroll, int xPos, int yPos)
+{
+	LRESULT result;
+	windowlessObject->OnWindowMessage(WM_MOUSEWHEEL, MAKEWPARAM(0, relScroll), MAKELPARAM(xPos, yPos), &result);
 }
 
 bool FlashControl::isPointOverMe(int screenX, int screenY)

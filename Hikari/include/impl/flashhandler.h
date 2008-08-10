@@ -60,6 +60,7 @@ std::wstring serializeValue(const FlashValue& value)
 			std::wstring stringVal = value.getString();
 			replaceAll(stringVal, L"&", L"&amp;");
 			replaceAll(stringVal, L"\"", L"&quot;");
+			replaceAll(stringVal, L"'", L"&apos;");
 			replaceAll(stringVal, L"<", L"&lt;");
 			replaceAll(stringVal, L">", L"&gt;");
 
@@ -83,6 +84,7 @@ FlashValue deserializeValue(const std::wstring& valueStr)
 	{
 		std::wstring stringVal = valueStr.substr(8, valueStr.find(L"</string>", 8) - 8);
 		replaceAll(stringVal, L"&quot;", L"\"");
+		replaceAll(stringVal, L"&apos;", L"'");
 		replaceAll(stringVal, L"&lt;", L"<");
 		replaceAll(stringVal, L"&gt;", L">");
 		replaceAll(stringVal, L"&amp;", L"&");

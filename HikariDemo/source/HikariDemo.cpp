@@ -110,7 +110,7 @@ void HikariDemo::loadInputSystem()
 
 bool HikariDemo::mouseMoved(const OIS::MouseEvent &arg)
 {
-	return hikariMgr->injectMouseMove(arg.state.X.abs, arg.state.Y.abs);
+	return hikariMgr->injectMouseMove(arg.state.X.abs, arg.state.Y.abs) || hikariMgr->injectMouseWheel(arg.state.Z.rel);
 }
 
 bool HikariDemo::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)

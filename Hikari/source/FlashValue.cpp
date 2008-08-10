@@ -78,6 +78,14 @@ FlashValue::FlashValue(const wchar_t* stringValue) : strValue(stringValue), numV
 {
 }
 
+FlashValue::FlashValue(const std::string& stringValue) : strValue(stringValue), numValue(0), boolValue(0), valueType(FT_STRING)
+{
+}
+
+FlashValue::FlashValue(const std::wstring& stringValue) : strValue(stringValue), numValue(0), boolValue(0), valueType(FT_STRING)
+{
+}
+
 FlashValue::FlashValue(const Ogre::DisplayString& stringValue) : strValue(stringValue), numValue(0), boolValue(0), valueType(FT_STRING)
 {
 }

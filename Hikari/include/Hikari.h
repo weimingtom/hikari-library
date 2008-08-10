@@ -100,7 +100,7 @@ public:
 	FlashControl* createFlashMaterial(const Ogre::String& name, int width, int height);
 
 	/**
-	* Flags the specified FlashControl for destruction.
+	* Flags the specified FlashControl for destruction (to occur at the next update)
 	*
 	* @param	controlToDestroy	The control to flag for destruction.
 	*/
@@ -170,6 +170,15 @@ public:
 	* @return	Returns true if the mouse event was handled by a FlashControl overlay, else returns false.
 	*/
 	bool injectMouseUp(int buttonID);
+
+	/**
+	* Injects a global mouse-wheel event to be handled by all FlashControl overlays.
+	*
+	* @param	relScroll	The relative scroll amount of the mouse (in OIS, this is arg.state.Z.rel).
+	*
+	* @return	Returns true if the mouse event was handled by a FlashControl overlay, else returns false.
+	*/
+	bool injectMouseWheel(int relScroll);
 
 	/**
 	* Injects a keyboard-event to be handled by the focused FlashControl. You generally

@@ -8,8 +8,12 @@ API Changes since v0.2:
 -- FlashControl::getUVScale has been added
 -- FlashControl::setIgnoreTransparentPixels has been added
 -- FlashControl::getVisibility has been added
+-- FlashControl::setScaleMode has been added
+-- FlashControl::gotoFrame has been added
+-- FlashControl::injectMouseWheel has been added
 - In HikariManager:
 -- HikariManager::injectKeyEvent has been added
+-- HikariManager::injectMouseWheel has been added
 -- HikariManager::setKeyboardHookEnabled has been added
 -- HikariManager::destroyAllControls has been added
 -- HikariManager::createFlashOverlay now allows automatic z-order incrementation
@@ -26,6 +30,8 @@ Bugfixes since v0.2:
 - Patched up a memory leak in FlashControl, thanks to Adis.
 - Applied a potential workaround for heap corruption due to Ogre::DisplayString in FlashControl::callFunction.
 - Applied a potential fix for certain FlashControl destruction assertions.
+- Fixed a bug with transmitting apostrophes using FlashControl::callFunction and function callbacks.
+- Made FlashValue more compatible with major string types.
 
 Current Version: Hikari v0.2
 

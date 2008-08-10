@@ -88,7 +88,21 @@ public:
 	* @param	stringValue	The value to initialize this FlashValue with.
 	*/
 	FlashValue(const wchar_t* stringValue);
+
+	/**
+	* Creates a FlashValue as a string type.
+	*
+	* @param	stringValue	The value to initialize this FlashValue with.
+	*/
+	FlashValue(const std::string& stringValue);
 	
+	/**
+	* Creates a FlashValue as a string type.
+	*
+	* @param	stringValue	The value to initialize this FlashValue with.
+	*/
+	FlashValue(const std::wstring& stringValue);
+
 	/**
 	* Creates a FlashValue as a string type.
 	*
