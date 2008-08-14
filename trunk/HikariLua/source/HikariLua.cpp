@@ -5,10 +5,24 @@
 #include "luna.h"
 #include <Ogre.h>
 
+#include <winnls.h>
+
 static Hikari::Arguments lua2arg(lua_State*, int);
 static lua_State *g_pLua = NULL;
 static Ogre::Viewport *g_viewport = NULL;
 static Hikari::HikariManager *g_hikariMgr = NULL;
+
+class LuaHikariUpdate : public CUpdatable
+{
+public:
+	void Update(float fTime);
+};
+
+void LuaHikariUpdate::Update(float fTime)
+{
+	g_hikariMgr->update();
+}
+
 
 class LuaFlashControl;
 
@@ -29,7 +43,7 @@ private:
 };
 
 
-class LuaFlashControl : public CUpdatable
+class LuaFlashControl
 {
 public:
 	LuaFlashControl(lua_State *L);
@@ -68,8 +82,6 @@ public:
 	int lua_createFlashOverlay(lua_State *L);	//(const char *name, int height, int width, zorder)
 
 	std::map<std::string,LuaDispatcher *> m_mapDispatchers;
-
-	virtual void Update(float fTime);
 
 protected:
 	Hikari::FlashControl *m_pControl;
@@ -316,7 +328,8 @@ int LuaFlashControl::lua_callFunction(lua_State *L)  //(Ogre::DisplayString func
 	// get all lua arguments and convert to "args"
 	Hikari::Arguments args = lua2arg(L, 2);
 
-	Hikari::FlashValue v = m_pControl->callFunction(funcName, args);
+	Ogre::DisplayString wideName(funcName);
+	Hikari::FlashValue v = m_pControl->callFunction(wideName, args);
 
 	lua_pushinteger(L, (int) v.getNumber());
 	return 1;
@@ -381,7 +394,6 @@ static Hikari::Arguments lua2arg(lua_State *L, int argNum)
 	return args;
 }
 
-
 Hikari::FlashValue LuaDispatcher::ASEntryPoint(Hikari::FlashControl* caller, const Hikari::Arguments& args)
 {
 	lua_State *L = g_pLua;
@@ -412,7 +424,7 @@ Hikari::FlashValue LuaDispatcher::ASEntryPoint(Hikari::FlashControl* caller, con
 			lua_pushnumber(L, (*it).getNumber());   /* push argument */
 			break;
 		case Hikari::FT_STRING:
-			lua_pushstring(L, (const char *)((*it).getString().c_str()));   /* push argument */
+			lua_pushstring(L, (*it).getString().asUTF8_c_str());   /* push argument */
 			break;
 		case Hikari::FT_NULL:
 			lua_pushnil(L);
@@ -450,11 +462,6 @@ Hikari::FlashValue LuaDispatcher::ASEntryPoint(Hikari::FlashControl* caller, con
 	return v;
 }
 
-void LuaFlashControl::Update(float fTime)
-{
-	g_hikariMgr->update();
-}
-
 
 lua_State *initHikariLua(lua_State *pLua, Ogre::Viewport *pView, const char *pPath)
 {
@@ -467,6 +474,8 @@ lua_State *initHikariLua(lua_State *pLua, Ogre::Viewport *pView, const char *pPa
 	g_pLua = pLua;
 
 	g_hikariMgr = new Hikari::HikariManager(pPath);
+	new LuaHikariUpdate();
+
 	Luna<LuaFlashControl>::Register(g_pLua);
 	return g_pLua;
 }
