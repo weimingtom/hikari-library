@@ -13,7 +13,7 @@ HikariDemo::HikariDemo() : root(0), shouldQuit(false), renderWin(0), sceneMgr(0)
 	if(shouldQuit) return;
 
 	renderWin = root->initialise(true, "HikariDemo");
-	sceneMgr = root->createSceneManager("TerrainSceneManager");
+	sceneMgr = root->createSceneManager("DefaultSceneManager");
 	WindowEventUtilities::addWindowEventListener(renderWin, this);
 
 	createScene();
