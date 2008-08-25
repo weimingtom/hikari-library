@@ -17,6 +17,7 @@ API Changes since v0.2:
 -- HikariManager::setKeyboardHookEnabled has been added
 -- HikariManager::destroyAllControls has been added
 -- HikariManager::createFlashOverlay now allows automatic z-order incrementation
+- Added enum 'ScaleMode'
 
 Core Changes since v0.2:
 - FlashValue now supports value-type interpretation
@@ -24,6 +25,7 @@ Core Changes since v0.2:
 - As a workaround for better IME support, you may now disable the internal keyboard-hook and inject keyboard/IME messages directly from the main window's WindowProc.
 - Alpha-picking (the filtering of mouse clicks by transparency) is now implemented.
 - In the HikariManager, global mouse-movement events are now broadcast to all Flash overlays instead of only the top-most control
+- Mouse-wheel injection is now supported
 
 Bugfixes since v0.2:
 - FlashControl overlays weren't being sorted correctly by z-order during focus, this has been fixed.
@@ -32,6 +34,9 @@ Bugfixes since v0.2:
 - Applied a potential fix for certain FlashControl destruction assertions.
 - Fixed a bug with transmitting apostrophes using FlashControl::callFunction and function callbacks.
 - Made FlashValue more compatible with major string types.
+
+Demo changes since v0.2:
+- Removed dependency upon the Terrain Scene Manager.
 
 Current Version: Hikari v0.2
 
