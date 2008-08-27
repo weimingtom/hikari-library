@@ -103,6 +103,7 @@ protected:
 	Impl::RenderBuffer* renderBuffer;
 	bool usingAlphaHack;
 	RECT dirtyBounds;
+	int lastDirtyWidth, lastDirtyHeight;
 	bool isClean, isTotallyDirty;
 
 	Impl::ViewportOverlay* overlay;
@@ -129,7 +130,7 @@ protected:
 	void handleFlashCall(const std::wstring& xmlString);
 	void update();
 
-	FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder);
+	FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::uchar zOrder, Ogre::uchar tier);
 	FlashControl(const Ogre::String& name, int width, int height);
 	~FlashControl();
 

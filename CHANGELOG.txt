@@ -1,3 +1,16 @@
+Current Version: Hikari v0.4
+
+API Changes since v0.3:
+- In HikariManager:
+-- HikariManager::createFlashOverlay has an extra parameter, 'tier'
+-- HikariManager::getFocusedControl has been added
+
+Core Changes since v0.3:
+- Tiered z-ordering has been implemented. When an overlay is focused, it is still popped to the front but it now stays within its tier (there are a total of six possible tiers, specified within the range [0, 5]). This feature makes it possible to group layers of overlays together (to say, keep all the background overlays from the foreground overlays).
+
+Bugfixes since v0.3:
+- The dimensions of a certain temporary render buffer were being improperly defined as a static variable instead of as a member variable-- causing undefined behavior when multiple FlashControls were instantiated. This bug has been fixed (thanks truwater).
+
 Current Version: Hikari v0.3
 
 API Changes since v0.2:

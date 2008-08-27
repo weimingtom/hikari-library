@@ -44,7 +44,9 @@ HikariManager::HikariManager(const std::string& assetsDirectory) : flashLib(0), 
 	mouseButtonRDown(false), zOrderCounter(1), keyboardHook(0)
 {
 	if(instance)
-		throw std::exception("In HikariManager constructor, HikariManager is already instantiated!");
+		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
+			"Can't instantiate the HikariManager singleton, it already exists.", 
+			"HikariManager::HikariManager");
 
 	instance = this;
 
@@ -84,7 +86,9 @@ HikariManager::~HikariManager()
 HikariManager& HikariManager::Get()
 {
 	if(!instance)
-		throw std::exception("In HikariManager::Get(), HikariManager is uninitialized!");
+		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
+			"Can't retrieve the HikariManager singleton, it isn't instantiated.", 
+			"HikariManager::Get");
 
 	return *instance;
 }
@@ -94,14 +98,31 @@ HikariManager* HikariManager::GetPointer()
 	return instance;
 }
 
-FlashControl* HikariManager::createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder)
+FlashControl* HikariManager::createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::uchar zOrder, Ogre::uchar tier)
 {
 	if(controls.find(name) != controls.end())
 		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
 			"An attempt was made to create a FlashControl named '" + name + "' when a FlashControl by the same name already exists!", 
 			"HikariManager::createFlashOverlay");
 
-	return controls[name] = new FlashControl(name, viewport, width, height, position, zOrder? zOrder : ++zOrderCounter);
+	if(zOrder == 0)
+	{
+		int highestZOrder = -1;
+
+		std::map<Ogre::String, FlashControl*>::iterator iter;
+		for(iter = controls.begin(); iter != controls.end(); iter++)
+			if(iter->second->overlay)
+				if(iter->second->overlay->getTier() == tier)
+					if(iter->second->overlay->getZOrder() > highestZOrder)
+						highestZOrder = iter->second->overlay->getZOrder();
+
+		if(highestZOrder == -1)
+			zOrder = 0;
+		else
+			zOrder = highestZOrder + 1;
+	}
+
+	return controls[name] = new FlashControl(name, viewport, width, height, position, zOrder, tier);
 }
 
 FlashControl* HikariManager::createFlashMaterial(const Ogre::String& name, int width, int height)
@@ -161,6 +182,11 @@ void HikariManager::update()
 			iter++;
 		}
 	}
+}
+
+FlashControl* HikariManager::getFocusedControl() const
+{
+	return focusedControl;
 }
 
 bool HikariManager::isAnyFocused()
@@ -304,9 +330,11 @@ bool HikariManager::focusControl(int x, int y, FlashControl* selection)
 	std::map<Ogre::String, FlashControl*>::iterator iter;
 	for(iter = controls.begin(); iter != controls.end(); iter++)
 		if(iter->second->overlay)
-			sortedControls.push_back(iter->second);
+			if(iter->second->overlay->getTier() == controlToFocus->overlay->getTier())
+				sortedControls.push_back(iter->second);
 
-	struct compare { bool operator()(FlashControl* a, FlashControl* b){ return(a->overlay->overlay->getZOrder() > b->overlay->overlay->getZOrder()); }};
+	struct compare { bool operator()(FlashControl* a, FlashControl* b){ return(a->overlay->getZOrder() > b->overlay->getZOrder()); }};
+
 	std::sort(sortedControls.begin(), sortedControls.end(), compare());
 
 	if(sortedControls.size())
@@ -318,11 +346,11 @@ bool HikariManager::focusControl(int x, int y, FlashControl* selection)
 				if(sortedControls.at(popIdx) == controlToFocus)
 					break;
 
-			unsigned short highestZ = sortedControls.at(0)->overlay->overlay->getZOrder();
+			unsigned char highestZ = sortedControls.at(0)->overlay->getZOrder();
 			for(unsigned int i = 0; i < popIdx; i++)
-				sortedControls.at(i)->overlay->overlay->setZOrder(sortedControls.at(i+1)->overlay->overlay->getZOrder());
+				sortedControls.at(i)->overlay->setZOrder(sortedControls.at(i+1)->overlay->getZOrder());
 			
-			sortedControls.at(popIdx)->overlay->overlay->setZOrder(highestZ);
+			sortedControls.at(popIdx)->overlay->setZOrder(highestZ);
 		}
 	}
 
@@ -344,7 +372,7 @@ FlashControl* HikariManager::getTopControl(int x, int y)
 		if(!top)
 			top = iter->second;
 		else
-			top = top->overlay->panel->getZOrder() > iter->second->overlay->panel->getZOrder() ? top : iter->second;
+			top = *(top->overlay) > *(iter->second->overlay) ? top : iter->second;
 	}
 
 	return top;
