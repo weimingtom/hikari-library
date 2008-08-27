@@ -78,12 +78,15 @@ public:
 	* @param	width	The width (in pixels).
 	* @param	height	The height (in pixels).
 	* @param	position	The position of the overlay, relative to the viewport.
-	* @param	zOrder	The z-order of the overlay. Specify '0' to automatically
-	*					use the next-highest z-order.
+	* @param	zOrder	The z-order of the overlay. [0, 99] Specify '0' to automatically
+	*					use the next-highest z-order within the specified tier.
+	* @param	tier	The tier of this overlay. [0, 5] You can group overlays together into
+	*					different tiers to keep background overlays separated from 
+	*					foreground overlays during focusing.
 	*
 	* @return	A pointer to the created FlashControl.
 	*/
-	FlashControl* createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder = 0);
+	FlashControl* createFlashOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::uchar zOrder = 0, Ogre::uchar tier = 0);
 
 	/**
 	* Creates a FlashControl as a pure Ogre Material.
@@ -132,6 +135,13 @@ public:
 	* control that is flagged for destruction.
 	*/
 	void update();
+
+	/**
+	* Retrieves the currently-focused FlashControl.
+	*
+	* @return	If any is focused, returns a pointer to the focused FlashControl, else returns 0;
+	*/
+	FlashControl* getFocusedControl() const;
 
 	/**
 	* Returns whether or not any FlashControl is focused (and is capturing keyboard input).

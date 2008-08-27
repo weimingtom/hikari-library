@@ -38,8 +38,9 @@ public:
 	Position position;
 	bool isVisible;
 	int width, height;
+	Ogre::uchar tier, zOrder;
 
-	ViewportOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& pos, const Ogre::String& matName, Ogre::ushort zOrder);
+	ViewportOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& pos, const Ogre::String& matName, Ogre::uchar zOrder, Ogre::uchar tier);
 	~ViewportOverlay();
 
 	void move(int deltaX, int deltaY);
@@ -50,11 +51,20 @@ public:
 
 	void hide();
 	void show();
+
+	void setTier(Ogre::uchar tier);
+	void setZOrder(Ogre::uchar zOrder);
+
+	Ogre::uchar getTier();
+	Ogre::uchar getZOrder();
 	
 	int getRelativeX(int absX);
 	int getRelativeY(int absY);
 
 	bool isWithinBounds(int absX, int absY);
+
+	bool operator>(const ViewportOverlay& rhs) const;
+	bool operator<(const ViewportOverlay& rhs) const;
 
 	void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);
 	void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);

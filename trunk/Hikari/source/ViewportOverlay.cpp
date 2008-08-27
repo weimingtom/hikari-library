@@ -26,9 +26,16 @@ using namespace Hikari;
 using namespace Hikari::Impl;
 
 ViewportOverlay::ViewportOverlay(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, 
-								 const Position& pos, const Ogre::String& matName, Ogre::ushort zOrder)
-: viewport(viewport), width(width), height(height), position(pos), isVisible(true)
+								 const Position& pos, const Ogre::String& matName, Ogre::uchar zOrder, Ogre::uchar tier)
+: viewport(viewport), width(width), height(height), position(pos), isVisible(true), zOrder(zOrder), tier(tier)
 {
+	if(zOrder > 99)
+		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
+			"Z-order is out of bounds, must be within [0, 99].", "ViewportOverlay::ViewportOverlay");
+	if(tier > 5)
+		OGRE_EXCEPT(Ogre::Exception::ERR_RT_ASSERTION_FAILED, 
+			"Tier number is out of bounds, must be within [0, 5].", "ViewportOverlay::ViewportOverlay");
+
 	OverlayManager& overlayManager = OverlayManager::getSingleton();
 
 	panel = static_cast<PanelOverlayElement*>(overlayManager.createOverlayElement("Panel", name + "Panel"));
@@ -38,7 +45,7 @@ ViewportOverlay::ViewportOverlay(const Ogre::String& name, Ogre::Viewport* viewp
 	
 	overlay = overlayManager.create(name + "Overlay");
 	overlay->add2D(panel);
-	overlay->setZOrder(zOrder);
+	setZOrder(zOrder);
 	resetPosition();
 
 	viewport->getTarget()->addListener(this);
@@ -137,6 +144,28 @@ void ViewportOverlay::show()
 	isVisible = true;
 }
 
+void ViewportOverlay::setTier(Ogre::uchar tier)
+{
+	this->tier = tier;
+	overlay->setZOrder(100 * tier + zOrder);
+}
+
+void ViewportOverlay::setZOrder(Ogre::uchar zOrder)
+{
+	this->zOrder = zOrder;
+	overlay->setZOrder(100 * tier + zOrder);
+}
+
+Ogre::uchar ViewportOverlay::getTier()
+{
+	return tier;
+}
+
+Ogre::uchar ViewportOverlay::getZOrder()
+{
+	return zOrder;
+}
+
 int ViewportOverlay::getRelativeX(int absX)
 {
 	return absX - viewport->getActualLeft() - panel->getLeft();
@@ -157,6 +186,16 @@ bool ViewportOverlay::isWithinBounds(int absX, int absY)
 			return true;
 
 	return false;
+}
+
+bool ViewportOverlay::operator>(const ViewportOverlay& rhs) const
+{
+	return tier * 100 + zOrder > rhs.tier * 100 + rhs.zOrder;
+}
+
+bool ViewportOverlay::operator<(const ViewportOverlay& rhs) const
+{
+	return tier * 100 + zOrder < rhs.tier * 100 + rhs.zOrder;
 }
 
 void ViewportOverlay::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)

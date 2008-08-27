@@ -30,7 +30,7 @@
 using namespace Hikari;
 using namespace Ogre;
 
-FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::ushort zOrder)
+FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, int width, int height, const Position& position, Ogre::uchar zOrder, Ogre::uchar tier)
 :	name(name),
 	site(0),
 	handler(0),
@@ -45,6 +45,7 @@ FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, i
 	usingAlphaHack(false),
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
+	lastDirtyWidth(0), lastDirtyHeight(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
 	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(true),
 	isIgnoringTransparent(true), transThreshold(0.04)
@@ -52,7 +53,7 @@ FlashControl::FlashControl(const Ogre::String& name, Ogre::Viewport* viewport, i
 	renderBuffer = new Impl::RenderBuffer(width, height);
 	createControl();
 	createMaterial();
-	overlay = new Impl::ViewportOverlay(name, viewport, width, height, position, materialName, zOrder);
+	overlay = new Impl::ViewportOverlay(name, viewport, width, height, position, materialName, zOrder, tier);
 	if(compensateNPOT)
 		overlay->panel->setUV(0, 0, (Real)width/(Real)texWidth, (Real)height/(Real)texHeight);
 }
@@ -72,6 +73,7 @@ FlashControl::FlashControl(const Ogre::String& name, int width, int height)
 	usingAlphaHack(false),
 	isClean(true), isTotallyDirty(false),
 	overlay(0),
+	lastDirtyWidth(0), lastDirtyHeight(0),
 	texWidth(width), texHeight(height), texDepth(0), texPitch(0), texUnit(0),
 	compensateNPOT(false), isTransparent(false), okayToDelete(false), isDraggable(false),
 	isIgnoringTransparent(false), transThreshold(0)
@@ -521,9 +523,6 @@ void FlashControl::update()
 	int dirtyWidth = dirtyBounds.right - dirtyBounds.left;
 	int dirtyHeight = dirtyBounds.bottom - dirtyBounds.top;
 	int dirtyBufSize = dirtyWidth * dirtyHeight * 4;
-
-	static int lastDirtyWidth = 0;
-	static int lastDirtyHeight = 0;
 
 	IViewObject* curView = 0;
 	flashInterface->QueryInterface(IID_IViewObject, (void**)&curView);
