@@ -317,6 +317,27 @@ public:
 	void move(int deltaX, int deltaY);
 
 	/**
+	* Changes the current position and sets it as the default. Only applicable if this FlashControl was created as an overlay.
+	*
+	* @param	position	The new position.
+	*/
+	void setPosition(const Position& position);
+
+	/**
+	* Resets the current position to the default. Only applicable if this FlashControl was created as an overlay.
+	*/
+	void resetPosition();
+
+	/**
+	* Retrieves the current screen coordinates (in relation to the render-window) of the overlay. Only applicable if this 
+	* FlashControl was created as an overlay.
+	*
+	* @param[out]	x	The integer to store the current x-coordinate in.
+	* @param[out]	y	The integer to store the current y-coordinate in.
+	*/
+	void getCoordinates(int& x, int& y);
+
+	/**
 	* Retrieves the width and height that this FlashControl was created with.
 	*
 	* @param[out]	width	The unsigned short that will be used to store the retrieved width.
