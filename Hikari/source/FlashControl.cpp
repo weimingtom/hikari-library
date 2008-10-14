@@ -415,6 +415,27 @@ void FlashControl::move(int deltaX, int deltaY)
 		overlay->move(deltaX, deltaY);
 }
 
+void FlashControl::setPosition(const Position& position)
+{
+	if(overlay)
+		overlay->setPosition(position);
+}
+
+void FlashControl::resetPosition()
+{
+	if(overlay)
+		overlay->resetPosition();
+}
+
+void FlashControl::getCoordinates(int& x, int& y)
+{
+	if(overlay)
+	{
+		x = overlay->getX();
+		y = overlay->getY();
+	}
+}
+
 void FlashControl::getExtents(unsigned short &width, unsigned short &height) const
 {
 	width = this->width;

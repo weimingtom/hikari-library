@@ -57,6 +57,9 @@ public:
 
 	Ogre::uchar getTier();
 	Ogre::uchar getZOrder();
+
+	int getX();
+	int getY();
 	
 	int getRelativeX(int absX);
 	int getRelativeY(int absY);

@@ -4,6 +4,10 @@ API Changes since v0.3:
 - In HikariManager:
 -- HikariManager::createFlashOverlay has an extra parameter, 'tier'
 -- HikariManager::getFocusedControl has been added
+- In FlashControl:
+-- FlashControl::setPosition has been added
+-- FlashControl::resetPosition has been added
+-- FlashControl::getCoordinates has been added
 
 Core Changes since v0.3:
 - Tiered z-ordering has been implemented. When an overlay is focused, it is still popped to the front but it now stays within its tier (there are a total of six possible tiers, specified within the range [0, 5]). This feature makes it possible to group layers of overlays together (to say, keep all the background overlays from the foreground overlays).

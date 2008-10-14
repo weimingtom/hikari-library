@@ -22,6 +22,7 @@
 #ifndef __FlashSite_H__
 #define __FlashSite_H__
 
+#pragma warning (disable : 4192)
 #import "PROGID:ShockwaveFlash.ShockwaveFlash" named_guids
 
 #ifndef max

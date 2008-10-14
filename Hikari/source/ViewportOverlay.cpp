@@ -166,6 +166,16 @@ Ogre::uchar ViewportOverlay::getZOrder()
 	return zOrder;
 }
 
+int ViewportOverlay::getX()
+{
+	return viewport->getActualLeft() + panel->getLeft();
+}
+
+int ViewportOverlay::getY()
+{
+	return viewport->getActualTop() + panel->getTop();
+}
+
 int ViewportOverlay::getRelativeX(int absX)
 {
 	return absX - viewport->getActualLeft() - panel->getLeft();
